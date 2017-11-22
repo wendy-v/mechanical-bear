@@ -3,7 +3,7 @@ import './App.css';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import ReactTooltip from 'react-tooltip';
-import * as V from 'victory';
+import { VictoryPie, VictoryLabel } from 'victory';
 
 
 import bears from './rilak-lemons.gif';
@@ -75,8 +75,50 @@ class Recipe extends React.Component {
       <div class="Text">
         <ReactTooltip />
         <img data-tip="Making the best lemonade!" src={cookingMama} height="250" />
-        <h1>Perfect Lemonade Recipe</h1>
+        <h1>The Perfect Lemonade Recipe</h1>
+        {this._recipePie()};
       </div>
+    );
+  }
+
+  _recipePie() {
+    return (
+      <VictoryPie
+        height={200}
+        colorScale={["gold", "pink", "lightblue"]}
+        style={{
+          data: { fillOpacity: 0.6, stroke: "white", strokeWidth: 2 },
+          labels: { fill: "green", fontSize: 10} 
+        }}
+        labelRadius={65}
+        data={[
+          { x: 1, y: 1, label: "lemon juice" },
+          { x: 2, y: 3, label: "strawberries" },
+          { x: 3, y: 5, label: "water" }
+        ]}
+        events={[{
+          target: "data",
+          eventHandlers: {
+            onMouseOver: () => {
+              return [
+                {
+                  target: "data",
+                    mutation: (props) => {
+                      return { style: { fill: props.style.fill, fillOpacity: 1 } };
+                    }
+                  }
+                ];
+              },
+              onMouseOut: () => {
+                return [{
+                  mutation: () => {
+                    return null;
+                  }
+                }];
+              }
+            }
+          }]}
+      />
     );
   }
 }
